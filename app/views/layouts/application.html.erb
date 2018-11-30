@@ -7,9 +7,99 @@
 
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+
   </head>
 
   <body>
-    <%= yield %>
+    <div class="container-fluid">
+    
+    <nav class="row">
+      <div class="col-1">
+        <%= link_to "LOGO", root_path %>
+      </div>
+
+      <div class="col"></div>
+
+        <% if signed_in? %>
+
+          <div class="col-1 text-right">
+            <button type="button" class="btn btn-link" data-toggle="modal" data-target="#signoutModal">
+              <i class="fas fa-power-off"></i>
+            </button>
+          </div>
+
+        <% else %>
+
+          <div class="col-1 text-right">
+            <button type="button" class="btn btn-link" data-toggle="modal" data-target="#signinModal">
+              <i class="fas fa-sign-in-alt"></i>
+            </button>
+          </div>
+
+        <% end %>
+    </nav>
+
+    <div class="row">
+      <% if flash[:notice] %>
+        <div class="col notice text-center"><%= flash[:notice] %></div>
+      <% end %>
+    </div>
+  
+    <div class="row">
+      <div class="col">
+        <%= yield %>
+      </div>
+    </div>
+
+    </div>
+
+    <!-- MODALS -->
+    <!-- SIGN IN -->
+    <div class="modal fade" id="signinModal" tabindex="-1" role="dialog" aria-labelledby="signinModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="signinModalLabel">Log in to APPNAME</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <%= form_with url: session_path do |f| %>
+              <%= f.text_field :email, class: "form-control w-100", placeholder: "Email Address" %> <br />
+              <%= f.password_field :password, class: "form-control w-100", placeholder: "Password" %> <br />
+              <%= f.submit "Login!", class: "form-control btn btn-success w-100"%>
+            <% end %>
+
+            <hr class="hr-text" data-content="or"/>
+            <%= link_to "Sign Up", new_user_path, class: "btn btn-primary w-100 text-white" %>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--SIGN OUT-->
+    <div class="modal fade" id="signoutModal" tabindex="-1" role="dialog" aria-labelledby="signoutModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="signoutModalLabel">Confirm Logout</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <%= form_with url: end_session_path, method: :delete do |f| %>
+              <%= f.submit "Logout", class: "form-control btn btn-danger w-100"%>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>    
+
   </body>
 </html>
