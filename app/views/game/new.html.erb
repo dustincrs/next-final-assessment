@@ -1,0 +1,39 @@
+<div class="jumbotron text-center mt-5 mx-5">
+<h1>New Game</h1>
+<hr/ >
+<%= form_with scope: :game, url: game_path do |f|%>
+	<div class="row">
+		<div class="col-4">
+			<%=f.label :length, "Game Length"%>
+			<%=f.select :length, [["Short (10)", 0], ["Medium (25)", 1], ["Long (50)", 2]], {}, class: "form-control mb-2"%>
+		</div>
+
+		<div class="col-4">
+			<%=f.label :type, "Question Type"%>
+			<%=f.select :type, [["True/False", 0], ["Multiple Choice", 1], ["Mixed", 2]], {}, class: "form-control mb-2"%>	
+		</div>
+
+		<div class="col-4">
+			<%=f.label :difficulty, "Difficulty"%>
+			<%=f.select :difficulty, [["Easy", 0], ["Medium", 1], ["Hard", 2]], {}, class: "form-control mb-2"%>
+		</div>
+
+	</div>
+
+	<hr />
+	
+	<div class="row">
+		<% Trial::CATEGORIES.each do |key, category| %>
+			<div class="col-3 container-for-check">
+				<%=f.check_box "category[#{key}]", id: key, class: "hidden-checkbox"%>
+				<%=f.label key, category[1].html_safe, for: key, class: "label-for-check"%>
+			</div>
+		<% end %>
+	</div>
+
+	<hr />
+
+	<%= f.submit "Start Game", class: "btn btn-success w-100"%>
+
+<% end %>
+</div>

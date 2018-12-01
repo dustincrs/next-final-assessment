@@ -1,1 +1,13 @@
-Welcome page placeholder
+PLACEHOLDER!!!
+
+<% if signed_in? %>
+
+	if you see this then you are signed in
+
+	<%= link_to "Play Game", new_game_path %>
+
+<% else %>
+
+	if you see this then you are NOT signed in
+
+<% end %>

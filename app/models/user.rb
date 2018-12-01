@@ -3,6 +3,8 @@ class User < ApplicationRecord
 
 	# ASSOCIATIONS
 	has_many :authentications, dependent: :destroy
+	has_many :trials
+	has_many :questions, through: :trials
 
 	# VALIDATIONS
 	validates :first_name, :last_name, :email, presence: true
