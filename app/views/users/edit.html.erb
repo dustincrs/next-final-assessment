@@ -1,6 +1,16 @@
-<h1>Editing User</h1>
+<div class="card w-100 mx-auto mt-5">
+	<div class="card-body">
+		<h1 class="text-center">Edit Profile</h1>
 
-<%= render 'form', user: @user %>
+		<%= form_with(model: @user, local: true) do |f| %>
+			<%= render 'form', user: @user, f: f %>
 
-<%= link_to 'Show', @user %> |
-<%= link_to 'Back', users_path %>
+			<div class="actions">
+			  <%= f.submit "Submit", class: "form-control btn btn-success" %>
+			</div>
+
+		<% end %>
+
+		<%= link_to 'Back', root_path, class: "btn btn-secondary w-100 text-white" %>
+	</div>
+</div>

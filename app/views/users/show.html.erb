@@ -1,4 +1,21 @@
-<p id="notice"><%= notice %></p>
+<div class="jumbotron mt-5 mx-5">
+	<div class="row text-center">
+		<div class="col">
+			LOGO GOES HERE
+		</div>
+	</div>
 
-<%= link_to 'Edit', edit_user_path(@user) %> |
-<%= link_to 'Back', users_path %>
+	<div class="row text-center">
+		<div class="col">
+			<h1><%= @user.full_name %></h1>
+		</div>
+	</div>
+
+	<% if signed_in? && (current_user.id == @user.id) %>
+		<div class="row text-center">
+			<div class="col">
+				<%= link_to "Edit Profile", edit_user_path(current_user), class: "btn btn-link" %>
+			</div>
+		</div>
+	<% end %>
+</div>

@@ -17,32 +17,48 @@
     <div class="container-fluid">
     
     <nav class="row">
-      <div class="col-1">
-        <%= link_to "LOGO", root_path %>
-      </div>
-
-      <div class="col"></div>
-
+      <!--Dropdown menu only seen when signed in-->
+      <div class="col-1 text-left">
         <% if signed_in? %>
+    
+          <div class="dropdown show">
+            <a class="btn btn-link dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="text-decoration: none !important;">
+              <i class="fas fa-bars"></i>
+            </a>
 
-          <div class="col-1 text-right">
-            <button type="button" class="btn btn-link" data-toggle="modal" data-target="#signoutModal">
-              <i class="fas fa-power-off"></i>
-            </button>
-          </div>
-
-        <% else %>
-
-          <div class="col-1 text-right">
-            <button type="button" class="btn btn-link" data-toggle="modal" data-target="#signinModal">
-              <i class="fas fa-sign-in-alt"></i>
-            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+              <%= link_to "My Profile", user_path(current_user), class: "dropdown-item"%>
+              <a class="dropdown-item" href="#">Another action</a>
+              <a class="dropdown-item" href="#">Something else here</a>
+            </div>
           </div>
 
         <% end %>
+      </div>
+
+      <!--Logo-->
+      <div class="col text-center">
+        <%= link_to "LOGO", root_path %>
+      </div>
+
+      <!--Signin/Signout controls-->
+        <div class="col-1 text-right">
+          <% if signed_in? %>
+
+            <button type="button" class="btn btn-link" data-toggle="modal" data-target="#signoutModal">
+              <i class="fas fa-power-off"></i>
+            </button>
+          <% else %>
+
+            <button type="button" class="btn btn-link" data-toggle="modal" data-target="#signinModal">
+              <i class="fas fa-sign-in-alt"></i>
+            </button>
+          <% end %>
+        </div>
+
     </nav>
 
-    <div class="row">
+    <div class="row" id="flash-message">
       <% if flash[:notice] %>
         <div class="col notice text-center"><%= flash[:notice] %></div>
       <% end %>
@@ -71,12 +87,13 @@
             <%= form_with url: session_path do |f| %>
               <%= f.text_field :email, class: "form-control w-100", placeholder: "Email Address" %> <br />
               <%= f.password_field :password, class: "form-control w-100", placeholder: "Password" %> <br />
-              <%= f.submit "Login!", class: "form-control btn btn-success w-100"%>
+              <%= f.submit "Login!", class: "form-control btn btn-primary w-100 mb-2"%>
+              <%= link_to "Login with Google", "/auth/google_oauth2", class: "btn btn-primary w-100 text-white" %>
             <% end %>
 
             <hr class="hr-text" data-content="or"/>
-            <%= link_to "Sign Up", new_user_path, class: "btn btn-primary w-100 text-white mb-2" %>
-            <%= link_to "<i class=\"fab fa-google-plus\"></i>".html_safe, "/auth/google_oauth2", class: "btn btn-light w-100" %>
+            <%= link_to "Sign Up", new_user_path, class: "btn btn-info w-100 text-white" %>
+
           </div>
         </div>
       </div>
@@ -100,6 +117,16 @@
         </div>
       </div>
     </div>    
+
+    <!--Scripts-->
+    <script>
+      // Flash message disappears after a certain duration
+      $(function() {
+        setTimeout(function(){
+          $('#flash-message').slideUp(500);
+        }, 1000);
+      });
+    </script>
 
   </body>
 </html>

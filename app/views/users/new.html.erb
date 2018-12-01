@@ -1,8 +1,17 @@
-<div class="card w-50 mx-auto mt-5">
+<div class="card w-100 mx-auto mt-5">
 	<div class="card-body">
 		<h1 class="text-center">Sign up with APPNAME</h1>
 
-		<%= render 'form', user: @user %>
+		<%= form_with(model: @user, local: true) do |f| %>
+			<%= render 'form', user: @user, f: f %>
+
+			<%= f.password_field :password, class: "form-control mb-2", placeholder: "Password"  %>
+
+			<div class="actions">
+			  <%= f.submit "Submit", class: "form-control btn btn-success" %>
+			</div>
+
+		<% end %>
 
 		<%= link_to 'Back', root_path, class: "btn btn-secondary w-100 text-white" %>
 	</div>
