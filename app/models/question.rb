@@ -1,7 +1,7 @@
 class Question < ApplicationRecord
 
 	# ASSOCIATIONS
-	has_many :trials
-	has_many :users, through: :trials
+	has_many :challenges
+	has_many :trials, through: :challenges
 	
 end

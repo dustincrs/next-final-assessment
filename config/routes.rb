@@ -1,12 +1,11 @@
 Rails.application.routes.draw do
 	# "Manual" model routings
 	root to: 'welcome#index'
-  	get 'game/new', as: 'new_game'
-  	get 'game/show', as: 'show_game'
-  	post 'game/create', as: 'game'
+
 	# Resources :models
 	resources :users
   	resources :questions
+  	resources :trials
 
 	# Sign in routes
 	post '/sessions', to: 'sessions#create', as: 'session'

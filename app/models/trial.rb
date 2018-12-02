@@ -30,6 +30,7 @@ class Trial < ApplicationRecord
 
 	# ASSOCIATIONS
 	belongs_to :user
-	belongs_to :question
+	has_many :challenges
+	has_many :questions, through: :challenges
 	
 end

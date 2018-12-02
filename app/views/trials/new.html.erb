@@ -1,21 +1,21 @@
 <div class="jumbotron text-center mt-5 mx-5">
 <h1>New Game</h1>
 <hr/ >
-<%= form_with scope: :game, url: game_path do |f|%>
+<%= form_with scope: :trial, url: trials_path do |f|%>
 	<div class="row">
 		<div class="col-4">
 			<%=f.label :length, "Game Length"%>
-			<%=f.select :length, [["Short (10)", 0], ["Medium (25)", 1], ["Long (50)", 2]], {}, class: "form-control mb-2"%>
+			<%=f.select :length, [["Short (10)", 10], ["Medium (25)", 25], ["Long (50)", 50]], {}, class: "form-control mb-2"%>
 		</div>
 
 		<div class="col-4">
 			<%=f.label :type, "Question Type"%>
-			<%=f.select :type, [["True/False", 0], ["Multiple Choice", 1], ["Mixed", 2]], {}, class: "form-control mb-2"%>	
+			<%=f.select :type, [["True/False", "boolean"], ["Multiple Choice", "multiple"], ["Mixed", 2]], {}, class: "form-control mb-2"%>	
 		</div>
 
 		<div class="col-4">
 			<%=f.label :difficulty, "Difficulty"%>
-			<%=f.select :difficulty, [["Easy", 0], ["Medium", 1], ["Hard", 2]], {}, class: "form-control mb-2"%>
+			<%=f.select :difficulty, [["Easy", "easy"], ["Medium", "medium"], ["Hard", "hard"]], {}, class: "form-control mb-2"%>
 		</div>
 
 	</div>
