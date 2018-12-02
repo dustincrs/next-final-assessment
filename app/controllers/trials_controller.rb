@@ -92,8 +92,6 @@ class TrialsController < ApplicationController
 
 	def show
 		@trial = Trial.find_by_id(params[:id])
-
-
 	end
 
 	private
