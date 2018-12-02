@@ -94,6 +94,10 @@ class TrialsController < ApplicationController
 		@trial = Trial.find_by_id(params[:id])
 	end
 
+	def check_answer
+		byebug
+	end
+
 	private
 	def trial_params
 		params.require(:trial).permit(:length, :type, :difficulty, category: {})

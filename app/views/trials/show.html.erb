@@ -1,0 +1,36 @@
+<div class="row" style="height: 94vh">
+	<div class="col">
+	
+		<div class="row" style="height: 56vh;">
+			<div class="col my-auto px-5">
+				text
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-6 p-0">
+				<%= button_to "Option", check_answer_path(@trial.id), class: "btn btn-primary w-100 rounded-0 p-5 text-left"%>
+			</div>
+
+			<div class="col-6 p-0">
+				<%= button_to "Option", check_answer_path(@trial.id), class: "btn btn-success w-100 rounded-0 p-5 text-left"%>
+
+			</div>
+
+		</div>
+
+		<div class="row">
+			<div class="col-6 p-0">
+				<%= button_to "Option", check_answer_path(@trial.id), class: "btn btn-warning w-100 rounded-0 p-5 text-left"%>
+
+			</div>
+
+			<div class="col-6 p-0">
+				<%= button_to "Option", check_answer_path(@trial.id), class: "btn btn-info w-100 rounded-0 p-5 text-left"%>
+
+			</div>
+
+		</div>
+
+	</div>
+</div>

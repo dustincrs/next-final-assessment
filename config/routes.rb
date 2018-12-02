@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
 	# "Manual" model routings
 	root to: 'welcome#index'
+	post '/trials/:id', to: 'trials#check_answer', as: 'check_answer'
 
 	# Resources :models
 	resources :users
