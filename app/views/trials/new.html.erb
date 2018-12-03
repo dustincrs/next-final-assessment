@@ -41,16 +41,18 @@
 
 <!-- Loading Modal -->
 <div class="modal fade text-center" id="loadingModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-<div class="modal-dialog" role="document">
-<div class="modal-content">
-  <div class="modal-body">
-    <%= image_tag "/loading.gif", class: "loading-icon my-4"%>
-	<p style="color: black; font-size: 16pt; line-height: 16pt;">Currently fetching your questions from the API, Please be patient!</p>
-  </div>
-</div>
-</div>
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+		  <div class="modal-body">
+		    <%= image_tag "/loading.gif", class: "loading-icon my-4"%>
+			<p style="color: black; font-size: 16pt; line-height: 16pt;">Currently fetching your questions from the API, Please be patient!</p>
+		  </div>
+		</div>
+	</div>
 </div>
 
+
+<!-- Help Modal -->
 
 <script>
 $(document).ready(function()	{
