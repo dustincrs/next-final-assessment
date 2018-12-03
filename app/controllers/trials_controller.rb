@@ -46,10 +46,8 @@ class TrialsController < ApplicationController
 		# One API call per category...
 		questions_by_category.each do |category_id, n_questions|
 			uri = URI("https://opentdb.com/api.php")
-			request_params = 	{ 	
-								amount: n_questions, 
-								category: category_id,
-								}
+			request_params[:amount] = n_questions
+			request_params[:category] = category_id
 
 			uri.query = URI.encode_www_form(request_params)
 
@@ -94,8 +92,17 @@ class TrialsController < ApplicationController
 
 	def show
 		if @trial.user.id != helpers.current_user.id
+			flash[:notice] = "You do not own this trial! Please create your own game."
 			redirect_to root_path
 		end
+
+		if @trial.has_been_accessed
+			flash[:notice] = "You have already accessed this trial, it is now closed. Please create a new game."
+			redirect_to root_path
+		end
+
+		@trial.has_been_accessed = true
+		@trial.save
 	end
 
 	def check_answer
@@ -117,7 +124,6 @@ class TrialsController < ApplicationController
 	end
 
 	def fetch_questions
-
 		respond_to do |format|
 			format.js 	{render json: @trial.questions.joins(:challenges).where(challenges: {is_answered: false})}
 		end
