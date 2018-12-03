@@ -2,18 +2,18 @@
 	<div class="col">
 	
 		<div class="row" style="height: 56vh;">
-			<div class="col my-auto px-5">
+			<div class="col my-auto px-5" id="question-detail">
 				text
 			</div>
 		</div>
 
 		<div class="row">
 			<div class="col-6 p-0">
-				<%= button_to "Option", check_answer_path(@trial.id), class: "btn btn-primary w-100 rounded-0 p-5 text-left"%>
+				<%= button_to "", check_answer_path(@trial.id), class: "btn btn-primary w-100 rounded-0 p-5 text-left question-option"%>
 			</div>
 
 			<div class="col-6 p-0">
-				<%= button_to "Option", check_answer_path(@trial.id), class: "btn btn-success w-100 rounded-0 p-5 text-left"%>
+				<%= button_to "", check_answer_path(@trial.id), class: "btn btn-default w-100 rounded-0 p-5 text-left question-option"%>
 
 			</div>
 
@@ -21,12 +21,12 @@
 
 		<div class="row">
 			<div class="col-6 p-0">
-				<%= button_to "Option", check_answer_path(@trial.id), class: "btn btn-warning w-100 rounded-0 p-5 text-left"%>
+				<%= button_to "", check_answer_path(@trial.id), class: "btn btn-warning w-100 rounded-0 p-5 text-left question-option"%>
 
 			</div>
 
 			<div class="col-6 p-0">
-				<%= button_to "Option", check_answer_path(@trial.id), class: "btn btn-info w-100 rounded-0 p-5 text-left"%>
+				<%= button_to "", check_answer_path(@trial.id), class: "btn btn-info w-100 rounded-0 p-5 text-left question-option"%>
 
 			</div>
 
@@ -34,3 +34,79 @@
 
 	</div>
 </div>
+
+<script>
+	$(document).ready(function()	{
+
+		let question_detail = document.getElementById("question-detail");
+		let question_options = document.querySelectorAll(".question-option");
+
+		// Fisher-Yates shuffle?
+		function shuffle(a) {
+		    for (let i = a.length - 1; i > 0; i--) {
+		        const j = Math.floor(Math.random() * (i + 1));
+		        [a[i], a[j]] = [a[j], a[i]];
+		    }
+		    return a;
+		}
+
+		function change_question(question_object)	{
+			// Set the question text
+			question_detail.innerHTML = question_object.text
+
+			// Get the options, shuffle
+			let incorrect_answers = question_object.incorrect_answers
+			let correct_answer = question_object.correct_answer
+			let all_options = incorrect_answers.concat(correct_answer)
+			shuffle(all_options)
+
+			// Assign all_options to the buttons 
+			for(i = 0; i < question_options.length; i++)	{
+				let button = question_options[i]
+				button.value = all_options[i]
+
+				button.onclick = function(event)	{
+					event.preventDefault();
+
+					$.ajax({	
+						url: "<%=check_answer_path(@trial.id)%>",
+						method: "POST",
+						data: {question_id: question_object.id, selected_answer: button.value},
+						success: function(data)	{
+							// When AJAX response returns, it will tell whether the selected
+							// answer was correct or not. Recolor all buttons to grey and 
+							// remove default behavior. Color the selected answer accordingly.
+							let response = $.parseJSON(data)
+							
+							question_options.forEach(function(button)	{
+								button.onclick = function(event)	{event.preventDefault()}
+								button.classList.remove(event.target.classList.item(1))
+								button.classList.add("btn-secondary")
+							});
+
+
+							if(response.is_correct)	{
+								event.target.classList.add("btn-success")
+							}	else	{
+								event.target.classList.add("btn-danger")
+							}
+						},
+					});
+				}
+			}
+		};
+
+		$.ajax({	url: "<%=fetch_questions_path(@trial.id)%>",
+					method: "GET",
+					success: function(data)	{
+						// Getting data from server, parse as JSON
+						let questions = $.parseJSON(data)
+						
+						// Initial question to be set
+						let question = questions.pop();
+						change_question(question)
+					},
+				});
+
+	});
+</script>

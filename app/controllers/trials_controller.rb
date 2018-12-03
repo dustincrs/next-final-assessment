@@ -1,6 +1,7 @@
 require 'net/http'
 
 class TrialsController < ApplicationController
+	before_action :set_trial, only: [:show, :fetch_questions, :check_answer]
 
 	def new
 	end
@@ -91,16 +92,45 @@ class TrialsController < ApplicationController
 	end
 
 	def show
-		@trial = Trial.find_by_id(params[:id])
 	end
 
 	def check_answer
-		byebug
+		question = Question.find_by_id(check_answer_params[:question_id])
+		challenge = Challenge.find_by(question_id: question.id, trial_id: @trial.id)
+
+		if question.correct_answer == check_answer_params[:selected_answer]
+			challenge.is_correct = true
+		else
+			challenge.is_correct = false
+		end
+
+		challenge.save
+
+		respond_to do |format|
+			format.js 	{render json: challenge}
+		end
+
+	end
+
+	def fetch_questions
+
+		respond_to do |format|
+			format.js 	{render json: @trial.questions}
+		end
+
 	end
 
 	private
+	def set_trial
+		@trial = Trial.find_by_id(params[:id])
+	end
+
 	def trial_params
 		params.require(:trial).permit(:length, :type, :difficulty, category: {})
+	end
+
+	def check_answer_params
+		params.permit(:id, :question_id, :selected_answer)
 	end
 
 end
