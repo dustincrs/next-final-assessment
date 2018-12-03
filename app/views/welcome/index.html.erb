@@ -58,65 +58,66 @@
 				</div>
 			</div>
 
+			<script>
+				$(document).ready(function()	{
+					let sample_options_buttons = document.querySelectorAll(".sample-option")
+
+					sample_options_buttons.forEach(function(button)	{
+						button.onclick = function(event)	{
+							event.preventDefault();
+							window.location.assign("<%=new_user_path%>")
+						}
+					})
+
+					function make_example_question()	{
+						$.ajax({
+							url: "https://opentdb.com/api.php",
+							method: "GET",
+							data: {amount: 1},
+							dataType: "JSON",
+							success: function(data)	{
+								console.log(data)
+								$("#sample-question-display").html(data.results[0].question)
+
+								all_options = data.results[0].incorrect_answers.concat(data.results[0].correct_answer)
+
+								// Reset all buttons
+								sample_options_buttons.forEach(function(button)	{
+									button.innerHTML = ""
+									button.classList.remove("d-none")
+								})
+
+								// Pick a random button to assign the correct answer
+								correct = sample_options_buttons[Math.floor(Math.random()* sample_options_buttons.length)]
+
+								correct.innerHTML = data.results[0].correct_answer
+
+								// Get the remaining buttons and give them the incorrect answer(s)
+								remaining = Array.from(sample_options_buttons).filter(function(b) {return b.innerHTML == ""})
+								
+
+								let i = 0
+								remaining.forEach(function(button)	{
+									label = data.results[0].incorrect_answers[i]
+									if(label != undefined)	{
+										button.innerHTML = label
+									}	else	{
+										button.classList.add("d-none")
+									}
+
+									i++
+								});
+							}
+						});
+					}
+
+					make_example_question()
+					setInterval(make_example_question, 5000)
+				});
+			</script>
+
 		<% end %>
 
 	</div>
 </div>
 
-<script>
-	$(document).ready(function()	{
-		let sample_options_buttons = document.querySelectorAll(".sample-option")
-
-		sample_options_buttons.forEach(function(button)	{
-			button.onclick = function(event)	{
-				event.preventDefault();
-				window.location.assign("<%=new_user_path%>")
-			}
-		})
-
-		function make_example_question()	{
-			$.ajax({
-				url: "https://opentdb.com/api.php",
-				method: "GET",
-				data: {amount: 1},
-				dataType: "JSON",
-				success: function(data)	{
-					console.log(data)
-					$("#sample-question-display").html(data.results[0].question)
-
-					all_options = data.results[0].incorrect_answers.concat(data.results[0].correct_answer)
-
-					// Reset all buttons
-					sample_options_buttons.forEach(function(button)	{
-						button.innerHTML = ""
-						button.classList.remove("d-none")
-					})
-
-					// Pick a random button to assign the correct answer
-					correct = sample_options_buttons[Math.floor(Math.random()* sample_options_buttons.length)]
-
-					correct.innerHTML = data.results[0].correct_answer
-
-					// Get the remaining buttons and give them the incorrect answer(s)
-					remaining = Array.from(sample_options_buttons).filter(function(b) {return b.innerHTML == ""})
-					
-
-					let i = 0
-					remaining.forEach(function(button)	{
-						label = data.results[0].incorrect_answers[i]
-						if(label != undefined)	{
-							button.innerHTML = label
-						}	else	{
-							button.classList.add("d-none")
-						}
-
-						i++
-					});
-				}
-			});
-		}
-
-		make_example_question()
-		setInterval(make_example_question, 5000)
-	});
-</script>

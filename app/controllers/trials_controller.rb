@@ -16,7 +16,7 @@ class TrialsController < ApplicationController
 		chosen_categories = trial_params[:category].select	{|k,v| v=="1"}.keys
 
 		if chosen_categories.size == 0
-			chosen_categories = trial_params[:category].keys.sample(5)
+			chosen_categories = trial_params[:category].keys.sample(2)
 		end
 
 		# Split the number of questions requested up by the number of categories requested:
@@ -35,14 +35,12 @@ class TrialsController < ApplicationController
 
 
 		# Construct hash for API params. Populate with things that don't change
-		request_params = 	{
-							difficulty: trial_params[:difficulty],
-							type: trial_params[:type],
-							}
+		request_params = {}
 
 		# Array to hold questions from the API
 		questions = []
 
+		failed = false
 		# One API call per category...
 		questions_by_category.each do |category_id, n_questions|
 			uri = URI("https://opentdb.com/api.php")
@@ -58,6 +56,16 @@ class TrialsController < ApplicationController
 			if parsed_response["response_code"] == 0 # successful GET
 				questions << parsed_response["results"]
 			end
+
+			if parsed_response["response_code"] == 1 # not enough questions!
+				failed =true
+				break
+			end
+		end
+
+		if failed
+			flash[:notice] = "API doesn't have enough questions for those setting combinations, try something else!"
+			redirect_to root_path and return
 		end
 
 		questions.flatten!
@@ -88,7 +96,7 @@ class TrialsController < ApplicationController
 		new_trial.questions << question_objects
 		new_trial.save
 
-		redirect_to trial_path(new_trial.id)
+		redirect_to trial_path(new_trial.id) and return
 	end
 
 	def show
@@ -126,7 +134,7 @@ class TrialsController < ApplicationController
 
 	def fetch_questions
 		respond_to do |format|
-			format.js 	{render json: @trial.questions.joins(:challenges).where(challenges: {is_answered: false})}
+			format.js 	{render json: @trial.questions}
 		end
 
 	end
@@ -137,7 +145,7 @@ class TrialsController < ApplicationController
 	end
 
 	def trial_params
-		params.require(:trial).permit(:length, :type, :difficulty, category: {}) 
+		params.require(:trial).permit(:length, category: {}) 
 	end
 
 	def check_answer_params

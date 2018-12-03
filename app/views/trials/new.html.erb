@@ -7,26 +7,16 @@
 
 <%= form_with scope: :trial, url: trials_path do |f|%>
 	<div class="row">
-		<div class="col-4">
+		<div class="col">
 			<%=f.label :length, "Game Length"%>
 			<%=f.select :length, [["Short (10)", 10], ["Medium (25)", 25], ["Long (50)", 50]], {}, class: "form-control mb-2"%>
-		</div>
-
-		<div class="col-4">
-			<%=f.label :type, "Question Type"%>
-			<%=f.select :type, [["True/False", "boolean"], ["Multiple Choice", "multiple"], ["Mixed", 2]], {}, class: "form-control mb-2"%>	
-		</div>
-
-		<div class="col-4">
-			<%=f.label :difficulty, "Difficulty"%>
-			<%=f.select :difficulty, [["Easy", "easy"], ["Medium", "medium"], ["Hard", "hard"]], {}, class: "form-control mb-2"%>
 		</div>
 
 	</div>
 
 	<hr />
 	
-	<div class="row">
+	<div class="row text-center">
 		<% Trial::CATEGORIES.each do |key, category| %>
 			<div class="col-2 container-for-check">
 				<%=f.check_box "category[#{key}]", id: key, class: "hidden-checkbox"%>
