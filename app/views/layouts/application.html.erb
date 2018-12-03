@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>RailsFinalAssessment</title>
+    <title>TriviArr!</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
@@ -28,7 +28,7 @@
 
             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
               <%= link_to "My Profile", user_path(current_user), class: "dropdown-item"%>
-              <a class="dropdown-item" href="#">Another action</a>
+              <%= link_to "Play a Game!", new_trial_path, class: "dropdown-item"%>
               <a class="dropdown-item" href="#">Something else here</a>
             </div>
           </div>
@@ -37,8 +37,10 @@
       </div>
 
       <!--Logo-->
-      <div class="col text-center">
-        <%= link_to "LOGO", root_path %>
+      <div class="col text-center py-1">
+        <a href="<%=root_path%>" id="logo">
+          <%='<i class="fas fa-skull-crossbones"></i>'.html_safe%>
+        </a>
       </div>
 
       <!--Signin/Signout controls-->
@@ -64,7 +66,7 @@
       <% end %>
     </div>
   
-    <div class="row">
+    <div class="row text-white" style="background-color: #333; height: 94vh">
       <div class="col">
         <%= yield %>
       </div>
@@ -78,7 +80,7 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="signinModalLabel">Log in to APPNAME</h5>
+            <h5 class="modal-title" id="signinModalLabel">Log in to TriviArr!</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>

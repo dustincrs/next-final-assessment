@@ -1,13 +1,122 @@
-PLACEHOLDER!!!
+<div class="row" style="height: 94vh;">
+	<div class="col">
 
-<% if signed_in? %>
+		<% if signed_in? %>
 
-	if you see this then you are signed in
+			<div class="row">
+				<div class="col text-center my-5">
+					<h1>Welcome, <%=current_user.full_name%>!</h1>
+				</div>
+			</div>
 
-	<%= link_to "Play Game", new_trial_path %>
+			<div class="row text-center my-5">
+				<div class="col mx-5">
+					<%= link_to '<i class="fas fa-user"></i>'.html_safe, user_path(current_user.id), style: "font-size: 150pt; color: #aaF;", class: "hover-link" %>
+				</div>
 
-<% else %>
+				<div class="col mx-5">
+					<%= link_to '<i class="fas fa-play"></i>'.html_safe, new_trial_path, style: "font-size: 150pt; color: #0F0;", class: "hover-link" %>
+				</div>
 
-	if you see this then you are NOT signed in
+			</div>
 
-<% end %>
+		<% else %>
+
+			<div class="row">
+				<div class="col text-center mt-5">
+					<h1>Welcome to TriviArr!</h1>		
+				</div>
+			</div>
+
+			<div class="row my-5" style="height: 10em">
+				<div class="col text-center">
+					<h2 id="sample-question-display">Loading some sample questions!</h2>
+				</div>
+			</div>
+
+			<div class="row text-center">
+				<div class="col">
+					<button class="sample-option btn btn-primary rounded-0 w-100"></button>
+				</div>
+			</div>
+
+			<div class="row text-center">
+				<div class="col">
+					<button class="sample-option btn btn-warning rounded-0 w-100"></button>
+				</div>
+			</div>
+
+			<div class="row text-center">
+				<div class="col">
+					<button class="sample-option btn btn-info rounded-0 w-100"></button>
+				</div>
+			</div>
+
+			<div class="row text-center">
+				<div class="col">
+					<button class="sample-option btn btn-secondary rounded-0 w-100"></button>
+				</div>
+			</div>
+
+		<% end %>
+
+	</div>
+</div>
+
+<script>
+	$(document).ready(function()	{
+		let sample_options_buttons = document.querySelectorAll(".sample-option")
+
+		sample_options_buttons.forEach(function(button)	{
+			button.onclick = function(event)	{
+				event.preventDefault();
+				window.location.assign("<%=new_user_path%>")
+			}
+		})
+
+		function make_example_question()	{
+			$.ajax({
+				url: "https://opentdb.com/api.php",
+				method: "GET",
+				data: {amount: 1},
+				dataType: "JSON",
+				success: function(data)	{
+					console.log(data)
+					$("#sample-question-display").html(data.results[0].question)
+
+					all_options = data.results[0].incorrect_answers.concat(data.results[0].correct_answer)
+
+					// Reset all buttons
+					sample_options_buttons.forEach(function(button)	{
+						button.innerHTML = ""
+						button.classList.remove("d-none")
+					})
+
+					// Pick a random button to assign the correct answer
+					correct = sample_options_buttons[Math.floor(Math.random()* sample_options_buttons.length)]
+
+					correct.innerHTML = data.results[0].correct_answer
+
+					// Get the remaining buttons and give them the incorrect answer(s)
+					remaining = Array.from(sample_options_buttons).filter(function(b) {return b.innerHTML == ""})
+					
+
+					let i = 0
+					remaining.forEach(function(button)	{
+						label = data.results[0].incorrect_answers[i]
+						if(label != undefined)	{
+							button.innerHTML = label
+						}	else	{
+							button.classList.add("d-none")
+						}
+
+						i++
+					});
+				}
+			});
+		}
+
+		make_example_question()
+		setInterval(make_example_question, 5000)
+	});
+</script>

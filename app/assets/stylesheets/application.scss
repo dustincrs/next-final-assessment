@@ -19,6 +19,18 @@ nav 	{
 	background-color: gainsboro;
 }
 
+a:hover {
+  background-color: transparent;
+}
+
+
+.hover-link {
+  opacity: 0.5;
+}
+
+.hover-link:hover {
+  opacity: 1;  
+}
 
 .notice   {
   background-color: yellow;

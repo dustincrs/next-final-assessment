@@ -1,62 +1,61 @@
-<div class="jumbotron text-center mt-5 mx-5 p-2" id="new-game-form">
+
+<div class="row">
+	<div class="col mb-2">
+		<h1>New Game</h1>
+	</div>
+</div>
+
+<%= form_with scope: :trial, url: trials_path do |f|%>
 	<div class="row">
-		<div class="col mb-2">
-			<h1>New Game</h1>
+		<div class="col-4">
+			<%=f.label :length, "Game Length"%>
+			<%=f.select :length, [["Short (10)", 10], ["Medium (25)", 25], ["Long (50)", 50]], {}, class: "form-control mb-2"%>
 		</div>
+
+		<div class="col-4">
+			<%=f.label :type, "Question Type"%>
+			<%=f.select :type, [["True/False", "boolean"], ["Multiple Choice", "multiple"], ["Mixed", 2]], {}, class: "form-control mb-2"%>	
+		</div>
+
+		<div class="col-4">
+			<%=f.label :difficulty, "Difficulty"%>
+			<%=f.select :difficulty, [["Easy", "easy"], ["Medium", "medium"], ["Hard", "hard"]], {}, class: "form-control mb-2"%>
+		</div>
+
 	</div>
 
-	<%= form_with scope: :trial, url: trials_path do |f|%>
-		<div class="row">
-			<div class="col-4">
-				<%=f.label :length, "Game Length"%>
-				<%=f.select :length, [["Short (10)", 10], ["Medium (25)", 25], ["Long (50)", 50]], {}, class: "form-control mb-2"%>
+	<hr />
+	
+	<div class="row">
+		<% Trial::CATEGORIES.each do |key, category| %>
+			<div class="col-2 container-for-check">
+				<%=f.check_box "category[#{key}]", id: key, class: "hidden-checkbox"%>
+				<%=f.label key, category[1].html_safe, for: key, class: "label-for-check"%>
 			</div>
+		<% end %>
+	</div>
 
-			<div class="col-4">
-				<%=f.label :type, "Question Type"%>
-				<%=f.select :type, [["True/False", "boolean"], ["Multiple Choice", "multiple"], ["Mixed", 2]], {}, class: "form-control mb-2"%>	
-			</div>
+	<%= f.submit "Start Game", class: "btn-lg btn-success w-100", id: "submit-button" %>
 
-			<div class="col-4">
-				<%=f.label :difficulty, "Difficulty"%>
-				<%=f.select :difficulty, [["Easy", "easy"], ["Medium", "medium"], ["Hard", "hard"]], {}, class: "form-control mb-2"%>
-			</div>
-
-		</div>
-
-		<hr />
-		
-		<div class="row">
-			<% Trial::CATEGORIES.each do |key, category| %>
-				<div class="col-2 container-for-check">
-					<%=f.check_box "category[#{key}]", id: key, class: "hidden-checkbox"%>
-					<%=f.label key, category[1].html_safe, for: key, class: "label-for-check"%>
-				</div>
-			<% end %>
-		</div>
-
-		<%= f.submit "Start Game", class: "btn-lg btn-success w-100", id: "submit-button" %>
-
-	<% end %>
-</div>
+<% end %>
 
 <!-- Loading Modal -->
 <div class="modal fade text-center" id="loadingModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-body">
-        <%= image_tag "/loading.gif", class: "loading-icon my-4"%>
-		<p>Currently fetching your questions from the API! Please be patient!</p>
-      </div>
-    </div>
+<div class="modal-dialog" role="document">
+<div class="modal-content">
+  <div class="modal-body">
+    <%= image_tag "/loading.gif", class: "loading-icon my-4"%>
+	<p>Currently fetching your questions from the API! Please be patient!</p>
   </div>
+</div>
+</div>
 </div>
 
 
 <script>
-	$(document).ready(function()	{
-		$("#submit-button").click(function()	{
-			$("#loadingModal").modal({backdrop: 'static', keyboard: false});
-		});
+$(document).ready(function()	{
+	$("#submit-button").click(function()	{
+		$("#loadingModal").modal({backdrop: 'static', keyboard: false});
 	});
+});
 </script>
