@@ -4,6 +4,8 @@ class User < ApplicationRecord
 	# ASSOCIATIONS
 	has_many :authentications, dependent: :destroy
 	has_many :trials
+	has_many :awards
+	has_many :badges, through: :awards
 
 	# VALIDATIONS
 	validates :first_name, :last_name, :email, presence: true
@@ -13,6 +15,16 @@ class User < ApplicationRecord
 	# FUNCTIONS
 	def full_name
 		return [first_name, last_name].join(" ")
+	end
+
+	def update_badges()
+		Badge.all.each do |badge|
+			if(awards.where(user_id: id, badge_id: badge.id).size == 0)
+				if(eval(badge.rules))
+					badges << badge
+				end
+			end
+		end
 	end
 
 	# OmniAuth2

@@ -10,6 +10,8 @@ class UsersController < ApplicationController
   # GET /users/1
   # GET /users/1.json
   def show
+    @user.update_badges
+    @badges = @user.badges
   end
 
   # GET /users/new
