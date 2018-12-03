@@ -80,15 +80,14 @@
 							
 							question_options.forEach(function(button)	{
 								button.onclick = function(event)	{event.preventDefault()}
-								button.classList.remove(event.target.classList.item(1))
-								button.classList.add("btn-secondary")
+								button.classList.replace(button.classList.item(1), "btn-secondary")
 							});
 
 
 							if(response.is_correct)	{
-								event.target.classList.add("btn-success")
+								event.target.classList.replace("btn-secondary", "btn-success")
 							}	else	{
-								event.target.classList.add("btn-danger")
+								event.target.classList.replace("btn-secondary", "btn-danger")
 							}
 						},
 					});
