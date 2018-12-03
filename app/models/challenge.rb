@@ -11,12 +11,18 @@ class Challenge < ApplicationRecord
 		if(is_answered && is_correct)
 			unless(trial.user.answered_questions.include?(question.id))
 				trial.user.score += question.score
-				trial.user.answered_questions << question.id
 			else
 				trial.user.score += 1
 			end
 
-			trial.user.save
+			trial.user.n_correct += 1
 		end
+
+		if(is_answered && !is_correct)
+			trial.user.n_incorrect += 1
+		end
+
+		trial.user.answered_questions << question.id
+		trial.user.save
 	end
 end
