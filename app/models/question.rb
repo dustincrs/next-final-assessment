@@ -2,9 +2,9 @@ class Question < ApplicationRecord
 
 	# CONSTANTS
 	SCORES = 	{
-					"easy" => 1,
-					"medium" => 2,
-					"hard" => 3,
+					"easy" => 2,
+					"medium" => 4,
+					"hard" => 6,
 				}
 
 	# ASSOCIATIONS

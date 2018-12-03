@@ -83,7 +83,7 @@ class TrialsController < ApplicationController
 												correct_answer: question["correct_answer"],
 												incorrect_answers: question["incorrect_answers"],
 											)
-				new_question.score = Question::SCORES[trial_params[:difficulty]]
+				new_question.score = Question::SCORES[question["difficulty"]]
 				new_question.save
 			else
 				new_question = same_question

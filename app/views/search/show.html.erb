@@ -1,0 +1,31 @@
+<div class="row mt-5">
+	<div class="col">
+		<input type="text" id="searchbar" class="w-100 form-control-lg" placeholder="Enter the name of a user..." />
+	</div>
+</div>
+
+<div class="row">
+	<div class="col" id="search-result-container">
+		
+	</div>
+</div>
+
+<script>
+	$(document).ready(function()	{
+
+		// When something is typed into the search bar...
+		$("#searchbar").on("input", function()	{
+			// Clear previous results...
+			$.ajax({
+					url: "<%=post_search_path%>",
+					method: "POST",
+					data: {query: $("#searchbar").val()},
+					dataType: "HTML",
+					success: function(results)	{
+						$(".search-result").remove()
+						$("#search-result-container").append(results)
+					}
+			});
+		});
+	});
+</script>

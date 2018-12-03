@@ -3,6 +3,8 @@ Rails.application.routes.draw do
 	root to: 'welcome#index'
 	get		'/trials/:id/fetch_questions', to: 'trials#fetch_questions', as: 'fetch_questions'
 	post 	'/trials/:id/check_answer', to: 'trials#check_answer', as: 'check_answer'
+  	get 	'/search', to: 'search#show', as: 'search'
+  	post	'/search', to: 'search#search', as: 'post_search'
 
 	# Resources :models
 	resources :users

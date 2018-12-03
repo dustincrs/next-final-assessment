@@ -1,5 +1,6 @@
 class User < ApplicationRecord
 	has_secure_password
+	include PgSearch
 
 	# ASSOCIATIONS
 	has_many :authentications, dependent: :destroy
@@ -11,6 +12,10 @@ class User < ApplicationRecord
 	validates :first_name, :last_name, :email, presence: true
 	validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
 
+	# SEARCH SCOPES
+	pg_search_scope :search_by_name, 
+					against: [:first_name, :last_name],
+					using: { tsearch: { prefix: true } }
 
 	# FUNCTIONS
 	def full_name

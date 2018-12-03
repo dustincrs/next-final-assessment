@@ -1,0 +1,8 @@
+<%= link_to user_path(result.id) do %>
+
+<div class="row my-4 mx-1 px-1 py-2 rounded search-result" style="background-color: gainsboro">
+	<div class="col text-left"><%=result.full_name%></div>
+	<div class="col text-right"><%=result.score%></div>
+</div>
+
+<% end %>

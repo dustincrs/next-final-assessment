@@ -9,7 +9,13 @@ class Challenge < ApplicationRecord
 	private
 	def update_user_score
 		if(is_answered && is_correct)
-			trial.user.score += question.score
+			unless(trial.user.answered_questions.include?(question.id))
+				trial.user.score += question.score
+				trial.user.answered_questions << question.id
+			else
+				trial.user.score += 1
+			end
+
 			trial.user.save
 		end
 	end

@@ -18,7 +18,7 @@
     
     <nav class="row" style="height: 6vh">
       <!--Dropdown menu only seen when signed in-->
-      <div class="col-1 text-left">
+      <div class="col text-left">
         <% if signed_in? %>
     
           <div class="dropdown show">
@@ -29,8 +29,9 @@
             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
               <%= link_to "My Profile", user_path(current_user), class: "dropdown-item"%>
               <%= link_to "Play a Game!", new_trial_path, class: "dropdown-item"%>
-              <a class="dropdown-item" href="#">Something else here</a>
+              <%= link_to "Search Users", search_path, class: "dropdown-item"%>    
             </div>
+            
           </div>
 
         <% end %>
@@ -44,7 +45,7 @@
       </div>
 
       <!--Signin/Signout controls-->
-        <div class="col-1 text-right">
+        <div class="col text-right">
           <% if signed_in? %>
 
             <button type="button" class="btn btn-link" data-toggle="modal" data-target="#signoutModal">
