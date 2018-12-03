@@ -2,6 +2,7 @@ require 'net/http'
 
 class TrialsController < ApplicationController
 	before_action :set_trial, only: [:show, :fetch_questions, :check_answer]
+	before_action :require_login
 
 	def new
 	end
@@ -92,6 +93,9 @@ class TrialsController < ApplicationController
 	end
 
 	def show
+		if @trial.user.id != helpers.current_user.id
+			redirect_to root_path
+		end
 	end
 
 	def check_answer
@@ -104,18 +108,18 @@ class TrialsController < ApplicationController
 			challenge.is_correct = false
 		end
 
+		challenge.is_answered = true
 		challenge.save
 
 		respond_to do |format|
-			format.js 	{render json: challenge}
+			format.json 	{render json: challenge}
 		end
-
 	end
 
 	def fetch_questions
 
 		respond_to do |format|
-			format.js 	{render json: @trial.questions}
+			format.js 	{render json: @trial.questions.joins(:challenges).where(challenges: {is_answered: false})}
 		end
 
 	end

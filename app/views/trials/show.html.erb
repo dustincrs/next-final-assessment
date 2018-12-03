@@ -1,8 +1,8 @@
 <div class="row" style="height: 94vh">
 	<div class="col">
 	
-		<div class="row" style="height: 56vh;">
-			<div class="col my-auto px-5" id="question-detail">
+		<div class="row" style="height: 56vh; background-color: #444">
+			<div class="col my-auto px-5 text-white" id="question-detail">
 				text
 			</div>
 		</div>
@@ -25,6 +25,7 @@
 
 			</div>
 
+
 			<div class="col-6 p-0">
 				<%= button_to "", check_answer_path(@trial.id), class: "btn btn-info w-100 rounded-0 p-5 text-left question-option"%>
 
@@ -35,77 +36,168 @@
 	</div>
 </div>
 
+<!--Next Question Modal-->
+<div class="modal fade" id="answerResultModal" tabindex="-1" role="dialog" aria-labelledby="answerResultModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title mx-auto" id="answerResultModalLabel">Result</h5>
+      </div>
+      <div class="modal-body">
+      	<button class="btn btn-primary w-100" id="next-question">Next Question</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Result Summary Modal-->
+<div class="modal fade" id="resultSummaryModal" tabindex="-1" role="dialog" aria-labelledby="resultSummaryModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title mx-auto" id="resultSummaryModalLabel">Results</h5>
+      </div>
+      <div class="modal-body text-center">
+      	<div class="row">
+      		<div class="col">
+      			<p class="text-green" style="font-size: 26pt">
+      				<%='<i class="fas fa-check"></i>'.html_safe%>
+  				</p>
+      			<p id="n_correct"></p>
+      		</div>
+
+      		<div class="col">
+      			<p class="text-red" style="font-size: 26pt">
+      				<%='<i class="fas fa-times"></i>'.html_safe%>
+  				</p>
+      			<p id="n_wrong"></p>
+      		</div>
+
+      	</div>
+      	<%= link_to "Leave", root_path, class: "btn btn-success w-100 text-white" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <script>
 	$(document).ready(function()	{
 
-		let question_detail = document.getElementById("question-detail");
-		let question_options = document.querySelectorAll(".question-option");
+	let question_detail = document.getElementById("question-detail");
+	let question_options = Array.from(document.querySelectorAll(".question-option"));
+	let button_classes = question_options.map(b => Array.from(b.classList).join(" "));
+	let n_correct = 0
+	let n_wrong = 0
 
-		// Fisher-Yates shuffle?
-		function shuffle(a) {
-		    for (let i = a.length - 1; i > 0; i--) {
-		        const j = Math.floor(Math.random() * (i + 1));
-		        [a[i], a[j]] = [a[j], a[i]];
-		    }
-		    return a;
-		}
+	$.ajax({	url: "<%=fetch_questions_path(@trial.id)%>",
+				method: "GET",
+				success: function(data)	{
 
-		function change_question(question_object)	{
-			// Set the question text
-			question_detail.innerHTML = question_object.text
+					function reset_buttons()	{
+						let i = 0
+						question_options.forEach(function(button)	{
+							button.classList = button_classes[i]
+							i++
+						});
+					}
 
-			// Get the options, shuffle
-			let incorrect_answers = question_object.incorrect_answers
-			let correct_answer = question_object.correct_answer
-			let all_options = incorrect_answers.concat(correct_answer)
-			shuffle(all_options)
+					// Make a generator function for questions so they can be accessed individually
+					function * generate_questions(question_array)	{
+						for(let i = 0; i < question_array.length; i++)	{
+							yield change_question(question_array[i])
+						}
+					}
 
-			// Assign all_options to the buttons 
-			for(i = 0; i < question_options.length; i++)	{
-				let button = question_options[i]
-				button.value = all_options[i]
+					// Fisher-Yates shuffle?
+					function shuffle(a) {
+					    for (let i = a.length - 1; i > 0; i--) {
+					        const j = Math.floor(Math.random() * (i + 1));
+					        [a[i], a[j]] = [a[j], a[i]];
+					    }
+					    return a;
+					}
 
-				button.onclick = function(event)	{
-					event.preventDefault();
+					function change_question(question_object)	{
+						// Set the question text
+						question_detail.innerHTML = question_object.text
 
-					$.ajax({	
-						url: "<%=check_answer_path(@trial.id)%>",
-						method: "POST",
-						data: {question_id: question_object.id, selected_answer: button.value},
-						success: function(data)	{
-							// When AJAX response returns, it will tell whether the selected
-							// answer was correct or not. Recolor all buttons to grey and 
-							// remove default behavior. Color the selected answer accordingly.
-							let response = $.parseJSON(data)
-							
-							question_options.forEach(function(button)	{
-								button.onclick = function(event)	{event.preventDefault()}
-								button.classList.replace(button.classList.item(1), "btn-secondary")
-							});
+						// Get the options, shuffle
+						let incorrect_answers = question_object.incorrect_answers
+						let correct_answer = question_object.correct_answer
+						let all_options = incorrect_answers.concat(correct_answer)
+						shuffle(all_options)
+
+						// Assign all_options to the buttons 
+						for(let i = 0; i < question_options.length; i++)	{
+							let button = question_options[i]
+
+							if(all_options[i]!=undefined)	{
+								button.value = all_options[i]
+
+								button.onclick = function(event)	{
+									event.preventDefault();
+
+									$.ajax({	
+										url: "<%=check_answer_path(@trial.id)%>",
+										method: "POST",
+										data: {question_id: question_object.id, selected_answer: button.value},
+										success: function(data)	{
+											// When AJAX response returns, it will tell whether the selected
+											// answer was correct or not. Recolor all buttons to grey and 
+											// remove default behavior. Color the selected answer accordingly.
+											let response = data
+											
+											question_options.forEach(function(button)	{
+												button.onclick = function(event)	{event.preventDefault()}
+												button.classList.replace(button.classList.item(1), "btn-secondary")
+											});
 
 
-							if(response.is_correct)	{
-								event.target.classList.replace("btn-secondary", "btn-success")
+											if(response.is_correct)	{
+												event.target.classList.replace("btn-secondary", "btn-success")
+												$("#answerResultModalLabel").text("Correct!")
+												n_correct++
+
+											}	else	{
+												event.target.classList.replace("btn-secondary", "btn-danger")
+												$("#answerResultModalLabel").text("Incorrect!")
+												n_wrong++
+											}
+
+											$("#answerResultModal").modal({backdrop: 'static', keyboard: false})
+										},
+									});
+
+								}
 							}	else	{
-								event.target.classList.replace("btn-secondary", "btn-danger")
+								button.onclick = function(event)	{event.preventDefault()}
+								button.value = ""
 							}
-						},
-					});
-				}
-			}
-		};
+						}
+					};
 
-		$.ajax({	url: "<%=fetch_questions_path(@trial.id)%>",
-					method: "GET",
-					success: function(data)	{
-						// Getting data from server, parse as JSON
-						let questions = $.parseJSON(data)
-						
-						// Initial question to be set
-						let question = questions.pop();
-						change_question(question)
-					},
-				});
+					// When the modal is dismissed, set up new question and reset buttons. If the question answered was the final question, set up and show the results modal.
+					document.getElementById("next-question").onclick = function(event)	{
+						if(get_questions.next().done == false)	{
+							reset_buttons()
+							$("#answerResultModal").modal("hide")
+						}	else	{
+							$("#n_correct").text(n_correct)
+							$("#n_wrong").text(n_wrong)
+							$("#resultSummaryModal").modal({backdrop: 'static', keyboard: false})
+						}
+					}
+
+					// Getting data from server, parse as JSON
+					let questions = $.parseJSON(data)
+
+					// Create the generator...
+					let get_questions = generate_questions(questions)
+
+					get_questions.next()
+				},
+			});
 
 	});
 </script>
