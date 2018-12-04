@@ -12,14 +12,18 @@ class Challenge < ApplicationRecord
 			unless(trial.user.answered_questions.include?(question.id))
 				trial.user.score += question.score
 			else
+				# User has encountered this question before!
+				# Only give one point and do not add the question to any of the arrays!
 				trial.user.score += 1
+				trial.user.save
+				return
 			end
 
-			trial.user.n_correct += 1
+			trial.user.correct_answers << question.id
 		end
 
 		if(is_answered && !is_correct)
-			trial.user.n_incorrect += 1
+			trial.user.incorrect_answers << question.id
 		end
 
 		trial.user.answered_questions << question.id

@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :edit, :update, :destroy]
+  before_action :set_user, only: [:show, :edit, :update, :destroy, :statistics]
 
   # GET /users
   # GET /users.json
@@ -61,6 +61,16 @@ class UsersController < ApplicationController
     respond_to do |format|
       format.html { redirect_to users_url, notice: 'User was successfully destroyed.' }
       format.json { head :no_content }
+    end
+  end
+
+  # Responds to AJAX with user answer statistics
+  def statistics
+    @correctly_answered = Question.where(id: @user.correct_answers)
+    @incorrectly_answered = Question.where(id: @user.incorrect_answers)
+
+    respond_to do |format|
+      format.json { render json: { correct: @correctly_answered, incorrect: @incorrectly_answered } }
     end
   end
 

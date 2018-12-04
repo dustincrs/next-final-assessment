@@ -1,4 +1,4 @@
-<div class="row my-5 text-center">
+<div class="row my-4 text-center">
 	<div class="col">
 		
 	</div>
@@ -26,6 +26,117 @@
 
 <hr />
 
-<div class="row text-center">
-	<%= render partial: 'users/badge', collection: @badges%>
+<div class="row mt-2">
+	<div class="col">
+		<div id="statsCarousel" class="carousel slide" data-ride="carousel">
+			<div class="carousel-inner">
+				<div class="carousel-item active">
+					<div id="pie_1"></div>
+				</div>
+				<div class="carousel-item">
+				  	<div id="bar_1"></div>
+				</div>
+				<div class="carousel-item">
+				  	<div id="pie_2"></div>
+				</div>
+			</div>
+
+		  <a class="carousel-control-prev" href="#statsCarousel" role="button" data-slide="prev">
+		    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+		    <span class="sr-only">Previous</span>
+		  </a>
+
+		  <a class="carousel-control-next" href="#statsCarousel" role="button" data-slide="next">
+		    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+		    <span class="sr-only">Next</span>
+		  </a>
+
+		</div>
+	</div>
+
+	<div class="col text-center">
+		<h3>Badges (<%=@badges.size%>)</h3>
+		<div class="row">
+			<%= render partial: 'users/badge', collection: @badges%>
+		</div>
+	</div>
 </div>
+
+
+
+<script>
+
+	$(document).ready(function()	{
+
+		$.ajax({
+				url: "<%=user_stats_path(@user.id)%>",
+				method: "GET",
+				dataType: "JSON",
+				success: function(response)	{
+					
+					// For the pie chart (categories of correctly answered questions)
+					categories = [...new Set(response.correct.map(q => q.category))]
+					
+					let pie_1_data = 	[{
+											values: categories.map(c => response.correct.filter(q => q.category == c).length),
+											labels: categories,
+											type: 'pie',
+										}]
+
+					let  pie_1_layout = {
+											title: "Correct answers by category",
+											autosize: false,
+					}
+
+					Plotly.newPlot('pie_1', pie_1_data, pie_1_layout)
+
+					// For the stacked bar chart (correct/wrong answer count by category)
+					all_questions = response.correct.concat(response.incorrect)
+					all_cats = [...new Set(all_questions.map(q => q.category))]
+
+					q_cat_correct = all_cats.map(c => response.correct.filter(q => q.category == c).length)
+					q_cat_incorrect = all_cats.map(c => response.incorrect.filter(q => q.category == c).length)
+
+					let correct_questions = 	{
+													x: all_cats,
+													y: q_cat_correct,
+													name: "Correct",
+													type: 'bar'
+												}
+
+					let incorrect_questions = 	{
+													x: all_cats,
+													y: q_cat_incorrect,
+													name: "Incorrect",
+													type: 'bar'
+												}
+
+					let bar_1_data = [correct_questions, incorrect_questions]
+
+					let bar_1_layout = {
+											title: "Correct/Incorrect answers by category",
+											barmode: 'stack',
+					}
+
+					Plotly.newPlot('bar_1', bar_1_data, bar_1_layout)
+
+					// For the pie chart (correct vs wrong)
+					let pie_2_data = 	[{
+											values: [response.correct.length, response.incorrect.length],
+											labels: ["Correct", "Incorrect"],
+											type: 'pie',
+										}]
+
+					let  pie_2_layout = {
+											title: "Correct vs Incorrect answers",
+					}
+
+					Plotly.newPlot('pie_2', pie_2_data, pie_2_layout)										
+
+
+				}
+		});
+
+	});
+
+</script>

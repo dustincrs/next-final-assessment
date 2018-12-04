@@ -5,9 +5,9 @@ class CreateUsers < ActiveRecord::Migration[5.2]
     	t.string		:last_name
     	t.string		:email
     	t.string		:password_digest
-    	t.integer		:score, 			default: 0
-    	t.integer		:n_correct, 		default: 0
-    	t.integer		:n_incorrect, 		default: 0
+    	t.integer		:score,                  		      	default: 0
+    	t.string		:correct_answers,    array: true, 		default: []
+    	t.string		:incorrect_answers,  array: true,    	default: []
 
 		t.timestamps
     end

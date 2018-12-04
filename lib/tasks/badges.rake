@@ -47,6 +47,21 @@ namespace :badges do
 					)
 	end
 
+	# Make badges for category participation...
+	thresholds = [10, 25, 50, 100]
+	keywords = ["Noob", "Greenhorn", "Expert", "Monarch"]
+	Trial::CATEGORIES.each do |k, v|
+		thresholds.zip(BADGE_TIERS, keywords).each do |threshold|
+			create_badge(
+							"Question.where(id: correct_answers).select	{|q| q.category == \"#{v[0]}\"}.size >= #{threshold[0]}",
+							v[1][10...-6], # Gets the FA icon code without HTML tags!
+							"#{threshold[1]}",
+							"#{v[0]} #{threshold[2]}",
+							"Answered #{threshold[0]} questions correctly in the category of #{v[0]}!",
+					)
+		end
+	end
+
   end
 
 end

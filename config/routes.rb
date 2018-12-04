@@ -5,6 +5,7 @@ Rails.application.routes.draw do
 	post 	'/trials/:id/check_answer', to: 'trials#check_answer', as: 'check_answer'
   	get 	'/search', to: 'search#show', as: 'search'
   	post	'/search', to: 'search#search', as: 'post_search'
+  	get 	'/users/:id/statistics', to: 'users#statistics', as: 'user_stats'
 
 	# Resources :models
 	resources :users
