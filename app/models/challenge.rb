@@ -6,9 +6,6 @@ class Challenge < ApplicationRecord
 	belongs_to :trial
 	belongs_to :question
 
-	# VALIDATIONS
-	validates :is_correct, :is_answered, presence: true
-
 	# DELEGATIONS
 	delegate :answered_questions, :score, :correct_answers, :incorrect_answers, to: :user, prefix: true
 
