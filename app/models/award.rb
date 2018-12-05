@@ -1,6 +1,8 @@
 class Award < ApplicationRecord
 
-	# Associations
+	# ASSOCIATIONS
 	belongs_to :user
 	belongs_to :badge
+
+	# VALIDATIONS
 end

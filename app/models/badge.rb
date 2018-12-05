@@ -4,6 +4,8 @@ class Badge < ApplicationRecord
 	has_many :awards
 	has_many :users, through: :awards
 
+	# VALIDATIONS
+	validates :rules, format: { without: /.*destroy.*/ } # For safety, do not allow badges to destroy stuff!
 
 	# FUNCTIONS
 	def render

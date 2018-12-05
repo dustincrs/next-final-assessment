@@ -11,6 +11,7 @@ class User < ApplicationRecord
 	# VALIDATIONS
 	validates :first_name, :last_name, :email, presence: true
 	validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
+	validates :email, uniqueness: true
 
 	# SEARCH SCOPES
 	pg_search_scope :search_by_name, 

@@ -5,6 +5,9 @@ class Challenge < ApplicationRecord
 	# ASSOCIATIONS
 	belongs_to :trial
 	belongs_to :question
+
+	# VALIDATIONS
+	validates :is_correct, :is_answered, presence: true
 	
 	private
 	def update_user_score

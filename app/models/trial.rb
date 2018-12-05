@@ -2,7 +2,7 @@ class Trial < ApplicationRecord
 
 	# CONSTANTS
 	CATEGORIES = 	{
-					"9" => ["General Knowledge", 		'<i class="fas fa-brain"></i>'],
+					"9" => 	["General Knowledge", 		'<i class="fas fa-brain"></i>'],
 					"10" => ["Books", 					'<i class="fas fa-book"></i>'],
 					"11" => ["Film", 					'<i class="fas fa-film"></i>'],
 					"12" => ["Music", 					'<i class="fas fa-music"></i>'],
