@@ -1,7 +1,12 @@
 <div class="row" style="height: 94vh">
 	<div class="col">
 
-		<div class="row" style="height: 56vh; background-color: #444">
+		<div class="row">
+			<div class="col text-center">
+				<h2 id="question-number"></h2>
+			</div>
+		</div>
+		<div class="row" style="height: 56vh">
 			<div class="col my-auto px-5 text-white">
 				<h2 id="question-detail"></h2>
 			</div>
@@ -84,9 +89,11 @@
 <script>
 	$(document).ready(function()	{
 
+	let question_number = document.getElementById("question-number");
 	let question_detail = document.getElementById("question-detail");
 	let question_options = Array.from(document.querySelectorAll(".question-option"));
 	let button_classes = question_options.map(b => Array.from(b.classList).join(" "));
+	let n_questions = 0
 	let n_correct = 0
 	let n_wrong = 0
 
@@ -105,7 +112,7 @@
 					// Make a generator function for questions so they can be accessed individually
 					function * generate_questions(question_array)	{
 						for(let i = 0; i < question_array.length; i++)	{
-							yield change_question(question_array[i])
+							yield change_question(i, question_array[i])
 						}
 					}
 
@@ -118,7 +125,10 @@
 					    return a;
 					}
 
-					function change_question(question_object)	{
+					function change_question(question_index, question_object)	{
+						// Set the question number
+						question_number.innerHTML = "Question " + (question_index + 1) + " of " + n_questions
+
 						// Set the question text
 						question_detail.innerHTML = question_object.text
 
@@ -191,7 +201,7 @@
 
 					// Getting data from server, parse as JSON
 					let questions = $.parseJSON(data)
-
+					let n_questions = questions.length
 					// Create the generator...
 					let get_questions = generate_questions(questions)
 
