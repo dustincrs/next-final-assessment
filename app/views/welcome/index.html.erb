@@ -1,15 +1,15 @@
-<div class="row" style="height: 94vh;">
+<div class="row">
 	<div class="col">
 
 		<% if signed_in? %>
 
 			<div class="row">
-				<div class="col text-center my-5">
-					<h1>Welcome, <%=current_user.full_name%>!</h1>
+				<div class="col text-center my-2">
+					<h3>Welcome, <%=current_user.full_name%>!</h3>
 				</div>
 			</div>
 
-			<div class="row text-center my-5">
+			<div class="row text-center my-2">
 				<div class="col mx-5">
 					<%= link_to '<i class="fas fa-user"></i>'.html_safe, user_path(current_user.id), style: "font-size: 150pt; color: #aaF;", class: "hover-link" %>
 				</div>
@@ -23,14 +23,14 @@
 		<% else %>
 
 			<div class="row">
-				<div class="col text-center mt-5">
+				<div class="col text-center mt-2">
 					<h1>Welcome to TriviArr!</h1>		
 				</div>
 			</div>
 
-			<div class="row my-5" style="height: 10em">
-				<div class="col text-center">
-					<h2 id="sample-question-display">Loading some sample questions!</h2>
+			<div class="row" style="min-height: 10em">
+				<div class="col text-center my-2">
+					<h6 id="sample-question-display">Loading some sample questions!</h6>
 				</div>
 			</div>
 

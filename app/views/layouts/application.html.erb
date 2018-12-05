@@ -13,12 +13,15 @@
 
     <!-- Plotly -->
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
   </head>
 
   <body>
-    <div class="container-fluid">
+    <div class="container-fluid" style="overflow-x: hidden">
 
-    <nav class="row" style="height: 6vh">
+    <nav class="row">
       <!--Dropdown menu only seen when signed in-->
       <div class="col text-left">
         <% if signed_in? %>
@@ -69,13 +72,13 @@
       <% end %>
     </div>
 
-    <div class="row text-white" style="background-color: #333; height: 94vh">
-      <div class="col">
+    <div class="row text-white" style="background-color: #333; min-height: 94vh">
+      <div class="col p-1">
         <%= yield %>
       </div>
     </div>
 
-    </div>
+  </div>
 
     <!-- MODALS -->
     <!-- SIGN IN -->
