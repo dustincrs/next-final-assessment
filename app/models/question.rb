@@ -22,9 +22,9 @@ class Question < ApplicationRecord
 		same_question = self.find_by(text: question["question"])
 
 		if same_question.nil?
-			new_question = 	self.new(	text: question["question"],
-											correct_answer: question["correct_answer"],
-											incorrect_answers: question["incorrect_answers"],
+			new_question = 	self.new(	text: HTMLEntities.new.decode(question["question"]),
+											correct_answer: HTMLEntities.new.decode(question["correct_answer"]),
+											incorrect_answers: question["incorrect_answers"].map { |a| HTMLEntities.new.decode(a) },
 											category: question["category"],
 											score: self::SCORES[question["difficulty"]],
 										)

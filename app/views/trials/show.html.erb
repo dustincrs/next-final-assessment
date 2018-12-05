@@ -1,19 +1,24 @@
 <div class="row" style="height: 94vh">
 	<div class="col">
 
-		<div class="row" style="height: 56vh; background-color: #444">
+		<div class="row">
+			<div class="col text-center">
+				<h2 id="question-number"></h2>
+			</div>
+		</div>
+		<div class="row" style="height: 56vh">
 			<div class="col my-auto px-5 text-white">
-				<h2 id="question-detail"></h2>
+				<h4 id="question-detail"></h4>
 			</div>
 		</div>
 
 		<div class="row">
 			<div class="col-6 p-0">
-				<%= button_to "", check_answer_path(@trial.id), class: "btn btn-primary w-100 rounded-0 p-5 text-left question-option"%>
+				<%= button_to "", check_answer_path(@trial.id), class: "btn btn-primary w-100 rounded-0 py-5 ml-2 text-left question-option" %>
 			</div>
 
 			<div class="col-6 p-0">
-				<%= button_to "", check_answer_path(@trial.id), class: "btn btn-default w-100 rounded-0 p-5 text-left question-option"%>
+				<%= button_to "", check_answer_path(@trial.id), class: "btn btn-default w-100 rounded-0 py-5 ml-2 text-left question-option" %>
 
 			</div>
 
@@ -21,13 +26,13 @@
 
 		<div class="row">
 			<div class="col-6 p-0">
-				<%= button_to "", check_answer_path(@trial.id), class: "btn btn-warning w-100 rounded-0 p-5 text-left question-option"%>
+				<%= button_to "", check_answer_path(@trial.id), class: "btn btn-warning w-100 rounded-0 py-5 ml-2 text-left question-option" %>
 
 			</div>
 
 
 			<div class="col-6 p-0">
-				<%= button_to "", check_answer_path(@trial.id), class: "btn btn-info w-100 rounded-0 p-5 text-left question-option"%>
+				<%= button_to "", check_answer_path(@trial.id), class: "btn btn-info w-100 rounded-0 py-5 ml-2 text-left question-option" %>
 
 			</div>
 
@@ -44,6 +49,16 @@
         <h5 class="modal-title mx-auto" style="color:black" id="answerResultModalLabel">Result</h5>
       </div>
       <div class="modal-body">
+
+      	<div class="w-100 text-center d-none" id="correct-answer" style="font-size: 50pt; color: green">
+      		<i class="fas fa-check"></i>
+      	</div>
+
+
+      	<div class="w-100 text-center d-none" id="incorrect-answer" style="font-size: 50pt; color: red">
+      		<i class="fas fa-times"></i>
+      	</div>
+
       	<button class="btn btn-primary w-100" id="next-question">Next Question</button>
       </div>
     </div>
@@ -84,9 +99,11 @@
 <script>
 	$(document).ready(function()	{
 
+	let question_number = document.getElementById("question-number");
 	let question_detail = document.getElementById("question-detail");
 	let question_options = Array.from(document.querySelectorAll(".question-option"));
 	let button_classes = question_options.map(b => Array.from(b.classList).join(" "));
+	let n_questions = 0
 	let n_correct = 0
 	let n_wrong = 0
 
@@ -105,7 +122,7 @@
 					// Make a generator function for questions so they can be accessed individually
 					function * generate_questions(question_array)	{
 						for(let i = 0; i < question_array.length; i++)	{
-							yield change_question(question_array[i])
+							yield change_question(i, question_array[i])
 						}
 					}
 
@@ -118,7 +135,10 @@
 					    return a;
 					}
 
-					function change_question(question_object)	{
+					function change_question(question_index, question_object)	{
+						// Set the question number
+						question_number.innerHTML = "Question " + (question_index + 1) + " of " + n_questions
+
 						// Set the question text
 						question_detail.innerHTML = question_object.text
 
@@ -134,7 +154,7 @@
 
 							if(all_options[i]!=undefined)	{
 								button.value = all_options[i]
-
+								
 								button.onclick = function(event)	{
 									event.preventDefault();
 
@@ -155,11 +175,13 @@
 
 
 											if(response.is_correct)	{
+												$("#correct-answer").removeClass("d-none")
 												event.target.classList.replace("btn-secondary", "btn-success")
 												$("#answerResultModalLabel").text("Correct!")
 												n_correct++
 
 											}	else	{
+												$("#incorrect-answer").removeClass("d-none")
 												event.target.classList.replace("btn-secondary", "btn-danger")
 												$("#answerResultModalLabel").text("Incorrect!")
 												n_wrong++
@@ -181,6 +203,8 @@
 					document.getElementById("next-question").onclick = function(event)	{
 						if(get_questions.next().done == false)	{
 							reset_buttons()
+							$("#correct-answer").addClass("d-none")
+							$("#incorrect-answer").addClass("d-none")
 							$("#answerResultModal").modal("hide")
 						}	else	{
 							$("#n_correct").text(n_correct)
@@ -191,7 +215,7 @@
 
 					// Getting data from server, parse as JSON
 					let questions = $.parseJSON(data)
-
+					let n_questions = questions.length
 					// Create the generator...
 					let get_questions = generate_questions(questions)
 
