@@ -17,7 +17,7 @@ class Question < ApplicationRecord
 	
 	# Takes a question from the API response as argument. If the question already exists, returns that question.
 	# Otherwise, creates and returns the question
-	def create_from_api_response(question)
+	def self.create_from_api_response(question)
 
 		same_question = self.find_by(text: question["question"])
 
