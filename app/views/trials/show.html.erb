@@ -49,6 +49,16 @@
         <h5 class="modal-title mx-auto" style="color:black" id="answerResultModalLabel">Result</h5>
       </div>
       <div class="modal-body">
+
+      	<div class="w-100 text-center d-none" id="correct-answer" style="font-size: 50pt; color: green">
+      		<i class="fas fa-check"></i>
+      	</div>
+
+
+      	<div class="w-100 text-center d-none" id="incorrect-answer" style="font-size: 50pt; color: red">
+      		<i class="fas fa-times"></i>
+      	</div>
+
       	<button class="btn btn-primary w-100" id="next-question">Next Question</button>
       </div>
     </div>
@@ -165,11 +175,13 @@
 
 
 											if(response.is_correct)	{
+												$("#correct-answer").removeClass("d-none")
 												event.target.classList.replace("btn-secondary", "btn-success")
 												$("#answerResultModalLabel").text("Correct!")
 												n_correct++
 
 											}	else	{
+												$("#incorrect-answer").removeClass("d-none")
 												event.target.classList.replace("btn-secondary", "btn-danger")
 												$("#answerResultModalLabel").text("Incorrect!")
 												n_wrong++
@@ -191,6 +203,8 @@
 					document.getElementById("next-question").onclick = function(event)	{
 						if(get_questions.next().done == false)	{
 							reset_buttons()
+							$("#correct-answer").addClass("d-none")
+							$("#incorrect-answer").addClass("d-none")
 							$("#answerResultModal").modal("hide")
 						}	else	{
 							$("#n_correct").text(n_correct)
