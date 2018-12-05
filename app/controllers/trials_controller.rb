@@ -82,9 +82,12 @@ class TrialsController < ApplicationController
 
 		new_trial = helpers.current_user.trials.create()
 		new_trial.questions << question_objects
-		new_trial.save
 
-		redirect_to trial_path(new_trial.id) and return
+		if(new_trial.save)
+			redirect_to trial_path(new_trial.id) and return
+		else
+			flash[:notice] = "An error occurred, please try again."
+		end
 	end
 
 	def show
