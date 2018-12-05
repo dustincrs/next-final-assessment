@@ -14,7 +14,7 @@ class User < ApplicationRecord
 	validates :email, uniqueness: true
 
 	# SEARCH SCOPES
-	pg_search_scope :search_by_name, 
+	pg_search_scope :search_by_name,
 					against: [:first_name, :last_name],
 					using: { tsearch: { prefix: true } }
 
@@ -43,12 +43,6 @@ class User < ApplicationRecord
 		)
 		user.authentications << authentication
 		return user
-	end
-
-	# grab google to access google for user data
-	def google_token
-		x = self.authentications.find_by(provider: 'google_oauth2')
-		return x.token unless x.nil?
 	end
 
 end

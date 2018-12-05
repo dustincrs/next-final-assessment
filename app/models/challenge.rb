@@ -8,12 +8,15 @@ class Challenge < ApplicationRecord
 
 	# VALIDATIONS
 	validates :is_correct, :is_answered, presence: true
-	
+
+	# DELEGATIONS
+	delegate :answered_questions, :score, :correct_answers, :incorrect_answers, to: :user, prefix: true
+
 	private
 	def update_user_score
 		if(is_answered && is_correct)
-			unless(trial.user.answered_questions.include?(question.id))
-				trial.user.score += question.score
+			unless(trial.user_answered_questions.include?(question.id))
+				trial.user_score += question.score
 			else
 				# User has encountered this question before!
 				# Only give one point and do not add the question to any of the arrays!
@@ -22,14 +25,14 @@ class Challenge < ApplicationRecord
 				return
 			end
 
-			trial.user.correct_answers << question.id
+			trial.user_correct_answers << question.id
 		end
 
 		if(is_answered && !is_correct)
-			trial.user.incorrect_answers << question.id
+			trial.user_incorrect_answers << question.id
 		end
 
-		trial.user.answered_questions << question.id
+		trial.user_answered_questions << question.id
 		trial.user.save
 	end
 end

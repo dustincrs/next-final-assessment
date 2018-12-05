@@ -6,9 +6,9 @@ namespace :badges do
 	def create_badge(rules, icon_code, icon_color, name, description)
 		puts "==========================="
 		puts "Making badge #{name}. With rule #{rules}"
-		new_badge = Badge.new(	name: name, 
-								description: description, 
-								rules: rules, 
+		new_badge = Badge.new(	name: name,
+								description: description,
+								rules: rules,
 								icon: icon_code,
 								icon_color: icon_color,
 							)
@@ -38,7 +38,7 @@ namespace :badges do
 	thresholds = [25, 50, 100, 150]
 	keywords = ["Poop Deck Swabber", "Scurvy Scallywag", "First Mate", "Pirate Capitan"]
 	thresholds.zip(BADGE_TIERS, keywords).each do |threshold|
-		create_badge(	
+		create_badge(
 						"score >= #{threshold[0]}",
 						"fas fa-skull-crossbones",
 						"#{threshold[1]}",

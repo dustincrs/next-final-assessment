@@ -10,7 +10,7 @@ Rails.application.routes.draw do
 	# Resources :models
 	resources :users
   	resources :questions
-  	resources :trials
+  	resources :trials, only: [:show, :new, :create]
 
 	# Sign in routes
 	post '/sessions', to: 'sessions#create', as: 'session'

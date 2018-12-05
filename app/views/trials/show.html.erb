@@ -1,6 +1,6 @@
 <div class="row" style="height: 94vh">
 	<div class="col">
-	
+
 		<div class="row" style="height: 56vh; background-color: #444">
 			<div class="col my-auto px-5 text-white">
 				<h2 id="question-detail"></h2>
@@ -128,7 +128,7 @@
 						let all_options = incorrect_answers.concat(correct_answer)
 						shuffle(all_options)
 
-						// Assign all_options to the buttons 
+						// Assign all_options to the buttons
 						for(let i = 0; i < question_options.length; i++)	{
 							let button = question_options[i]
 
@@ -138,16 +138,16 @@
 								button.onclick = function(event)	{
 									event.preventDefault();
 
-									$.ajax({	
+									$.ajax({
 										url: "<%=check_answer_path(@trial.id)%>",
 										method: "POST",
 										data: {question_id: question_object.id, selected_answer: button.value},
 										success: function(data)	{
 											// When AJAX response returns, it will tell whether the selected
-											// answer was correct or not. Recolor all buttons to grey and 
+											// answer was correct or not. Recolor all buttons to grey and
 											// remove default behavior. Color the selected answer accordingly.
 											let response = data
-											
+
 											question_options.forEach(function(button)	{
 												button.onclick = function(event)	{event.preventDefault()}
 												button.classList.replace(button.classList.item(1), "btn-secondary")
@@ -191,7 +191,7 @@
 
 					// Getting data from server, parse as JSON
 					let questions = $.parseJSON(data)
-					
+
 					// Create the generator...
 					let get_questions = generate_questions(questions)
 

@@ -75,21 +75,8 @@ class TrialsController < ApplicationController
 
 		# If the question already exists in the db, fetch it. Otherwise, create it and keep reference
 		questions.each do |question|
-
-			same_question = Question.find_by(text: question["question"])
-
-			if same_question.nil?
-				new_question = 	Question.new(	text: question["question"],
-												correct_answer: question["correct_answer"],
-												incorrect_answers: question["incorrect_answers"],
-												category: question["category"]
-											)
-				new_question.score = Question::SCORES[question["difficulty"]]
-				new_question.save
-			else
-				new_question = same_question
-			end
-
+			new_question = Question.create_from_api_response(question)
+			
 			question_objects << new_question
 		end
 
@@ -146,7 +133,7 @@ class TrialsController < ApplicationController
 	end
 
 	def trial_params
-		params.require(:trial).permit(:length, category: {}) 
+		params.require(:trial).permit(:length, category: {})
 	end
 
 	def check_answer_params

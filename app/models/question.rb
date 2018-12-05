@@ -15,4 +15,24 @@ class Question < ApplicationRecord
 	validates :text, :correct_answer, :incorrect_answers, :score, :category, presence: true
 	validates :score, numericality: { greater_than: 0 }
 	
+	# Takes a question from the API response as argument. If the question already exists, returns that question.
+	# Otherwise, creates and returns the question
+	def create_from_api_response(question)
+
+		same_question = self.find_by(text: question["question"])
+
+		if same_question.nil?
+			new_question = 	self.new(	text: question["question"],
+											correct_answer: question["correct_answer"],
+											incorrect_answers: question["incorrect_answers"],
+											category: question["category"],
+											score: self::SCORES[question["difficulty"]],
+										)
+			new_question.save
+		else
+			new_question = same_question
+		end
+
+		return new_question
+	end
 end

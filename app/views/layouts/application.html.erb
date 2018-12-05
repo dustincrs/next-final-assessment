@@ -19,12 +19,12 @@
 
   <body>
     <div class="container-fluid">
-    
+
     <nav class="row" style="height: 6vh">
       <!--Dropdown menu only seen when signed in-->
       <div class="col text-left">
         <% if signed_in? %>
-    
+
           <div class="dropdown show">
             <a class="btn btn-link dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="text-decoration: none !important;">
               <i class="fas fa-bars"></i>
@@ -33,9 +33,9 @@
             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
               <%= link_to "My Profile", user_path(current_user), class: "dropdown-item"%>
               <%= link_to "Play a Game!", new_trial_path, class: "dropdown-item"%>
-              <%= link_to "Search Users", search_path, class: "dropdown-item"%>    
+              <%= link_to "Search Users", search_path, class: "dropdown-item"%>
             </div>
-            
+
           </div>
 
         <% end %>
@@ -70,7 +70,7 @@
         <div class="col notice text-center"><%= flash[:notice] %></div>
       <% end %>
     </div>
-  
+
     <div class="row text-white" style="background-color: #333; height: 94vh">
       <div class="col">
         <%= yield %>
@@ -123,7 +123,7 @@
           </div>
         </div>
       </div>
-    </div>    
+    </div>
 
     <!--Scripts-->
     <script>
