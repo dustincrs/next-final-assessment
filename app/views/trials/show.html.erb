@@ -8,17 +8,17 @@
 		</div>
 		<div class="row" style="height: 56vh">
 			<div class="col my-auto px-5 text-white">
-				<h2 id="question-detail"></h2>
+				<h4 id="question-detail"></h4>
 			</div>
 		</div>
 
 		<div class="row">
 			<div class="col-6 p-0">
-				<%= button_to "", check_answer_path(@trial.id), class: "btn btn-primary w-100 rounded-0 p-5 text-left question-option"%>
+				<%= button_to "", check_answer_path(@trial.id), class: "btn btn-primary w-100 rounded-0 py-5 ml-2 text-left question-option" %>
 			</div>
 
 			<div class="col-6 p-0">
-				<%= button_to "", check_answer_path(@trial.id), class: "btn btn-default w-100 rounded-0 p-5 text-left question-option"%>
+				<%= button_to "", check_answer_path(@trial.id), class: "btn btn-default w-100 rounded-0 py-5 ml-2 text-left question-option" %>
 
 			</div>
 
@@ -26,13 +26,13 @@
 
 		<div class="row">
 			<div class="col-6 p-0">
-				<%= button_to "", check_answer_path(@trial.id), class: "btn btn-warning w-100 rounded-0 p-5 text-left question-option"%>
+				<%= button_to "", check_answer_path(@trial.id), class: "btn btn-warning w-100 rounded-0 py-5 ml-2 text-left question-option" %>
 
 			</div>
 
 
 			<div class="col-6 p-0">
-				<%= button_to "", check_answer_path(@trial.id), class: "btn btn-info w-100 rounded-0 p-5 text-left question-option"%>
+				<%= button_to "", check_answer_path(@trial.id), class: "btn btn-info w-100 rounded-0 py-5 ml-2 text-left question-option" %>
 
 			</div>
 
@@ -154,7 +154,7 @@
 
 							if(all_options[i]!=undefined)	{
 								button.value = all_options[i]
-
+								
 								button.onclick = function(event)	{
 									event.preventDefault();
 
